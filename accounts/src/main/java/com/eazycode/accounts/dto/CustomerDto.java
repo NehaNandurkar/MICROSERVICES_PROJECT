@@ -12,6 +12,17 @@ public class CustomerDto {
 
 	    private String mobileNumber;
 
+	    private AccountDto accountsDto;
+	    
+	    
+		public AccountDto getAccountsDto() {
+			return accountsDto;
+		}
+
+		public void setAccountsDto(AccountDto accountsDto) {
+			this.accountsDto = accountsDto;
+		}
+
 		public String getName() {
 			return name;
 		}

@@ -7,9 +7,11 @@ import java.util.Random;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.eazycode.accounts.dto.AccountDto;
 import com.eazycode.accounts.dto.CustomerDto;
 import com.eazycode.accounts.entity.Account;
 import com.eazycode.accounts.entity.Customer;
+import com.eazycode.accounts.mapper.AccountsMapper;
 import com.eazycode.accounts.mapper.CustomerMapper;
 import com.eazycode.accounts.repository.AccountsRepository;
 import com.eazycode.accounts.repository.CustomerRepository;
@@ -53,6 +55,23 @@ public class AccountsServiceImpl implements IAccountsService {
         
         return newAccount;
     }
+
+	@Override
+	public CustomerDto fetchAccountDetails(String mobileNumber) {
+	    Customer customer = customerRepository.findByMobileNumber(mobileNumber)
+	            .orElseThrow(() -> new RuntimeException(
+	                    "Customer with mobile number " + mobileNumber + " not found"));
+
+	    Account account = accountsRepository.findByCustomerId(customer.getCustomerId())
+	            .orElseThrow(() -> new RuntimeException(
+	                    "Account not found for customerId: " + customer.getCustomerId()));
+
+	    CustomerDto customerDto = CustomerMapper.mapToCustomerDto(customer, new CustomerDto());
+	    customerDto.setAccountsDto(AccountsMapper.mapToAccountsDto(account, new AccountDto()));
+
+	    return customerDto;
+	}
+
 
 
 }
