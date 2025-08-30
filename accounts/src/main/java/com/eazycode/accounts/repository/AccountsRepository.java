@@ -12,4 +12,6 @@ public interface AccountsRepository extends JpaRepository<Account,Integer> {
 
 	Optional<Account> findByCustomerId(Integer customerId);
 
+	void deleteByCustomerId(Integer customerId);
+
 }

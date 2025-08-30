@@ -3,6 +3,7 @@ package com.eazycode.accounts.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -59,5 +60,20 @@ public class AccountsController {
         }
         
     }
+	@DeleteMapping("/delete")
+	public ResponseEntity<ResponseDto> deleteAcountDetails(@RequestParam String mobileNumber){
+		 Boolean isDeleted=iAccountsService.deleteAcountDetails(mobileNumber);
+		 
+		 if(isDeleted) {
+	        	return ResponseEntity
+	        			.status(HttpStatus.OK)
+	        			.body(new ResponseDto(AccountsConstants.STATUS_200,AccountsConstants.MESSAGE_200));
+	        }else {
+	        	 return ResponseEntity
+	                     .status(HttpStatus.EXPECTATION_FAILED)
+	                     .body(new ResponseDto(AccountsConstants.STATUS_417, AccountsConstants.MESSAGE_417_DELETE));
+	        }
+	}
+	
 
 }

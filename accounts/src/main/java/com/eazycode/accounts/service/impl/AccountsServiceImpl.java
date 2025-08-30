@@ -6,6 +6,7 @@ import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.eazycode.accounts.constants.AccountsConstants;
 import com.eazycode.accounts.dto.AccountDto;
@@ -101,6 +102,19 @@ public class AccountsServiceImpl implements IAccountsService {
 
 		return isUpdated;
 		
+	}
+
+	@Override
+	@Transactional
+	public Boolean deleteAcountDetails(String mobileNumber) {
+		
+		Customer customer = customerRepository.findByMobileNumber(mobileNumber)
+	            .orElseThrow(() -> new ResourceNotFoundException("Customer", "mobileNumber", mobileNumber));
+
+		 accountsRepository.deleteByCustomerId(customer.getCustomerId());
+	     customerRepository.deleteById(customer.getCustomerId());
+
+	    return true;
 	}
 	
 
