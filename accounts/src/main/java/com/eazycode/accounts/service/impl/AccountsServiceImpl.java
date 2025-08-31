@@ -106,6 +106,7 @@ public class AccountsServiceImpl implements IAccountsService {
 
 	@Override
 	@Transactional
+	//Both deletes happen in one transaction – if one fails, both are cancelled.
 	public Boolean deleteAcountDetails(String mobileNumber) {
 		
 		Customer customer = customerRepository.findByMobileNumber(mobileNumber)
