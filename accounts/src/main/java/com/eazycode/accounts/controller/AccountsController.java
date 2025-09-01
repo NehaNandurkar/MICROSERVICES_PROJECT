@@ -16,11 +16,23 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.eazycode.accounts.constants.AccountsConstants;
 import com.eazycode.accounts.dto.CustomerDto;
+import com.eazycode.accounts.dto.ErrorResponseDto;
 import com.eazycode.accounts.dto.ResponseDto;
 import com.eazycode.accounts.service.IAccountsService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+
+//@Tag Provides metadata for Swagger UI common to all REST API 
+@Tag(
+		name="CRUD REST API for Accounts in EazyCode",
+		description="CRUD REST APIs in EazyBank to CREATE, UPDATE, FETCH AND DELETE account details")
 
 @RestController
 @RequestMapping(path="/api")
@@ -37,6 +49,27 @@ public class AccountsController {
 	@Autowired
 	IAccountsService iAccountsService;
 	
+	//@Operation Provides metadata for Swagger UI for CREATE API
+	 @Operation(
+	            summary = "Create Account REST API",
+	            description = "REST API to create new Customer &  Account inside EazyBank"
+	    )
+	 @ApiResponses({
+         @ApiResponse(
+                 responseCode = "201",
+                 description = "HTTP Status CREATED"
+         ),
+         @ApiResponse(
+                 responseCode = "500",
+                 description = "HTTP Status Internal Server Error",
+                 content = @Content(
+                         schema = @Schema(implementation = ErrorResponseDto.class)
+                         //Telling the spring doc whenever the 500 error happen I am going to send the ErrorResponse by following the schema defined inside this ErrorResponseDto class. 
+                         //Now the ErrorResponseDto will be visible in Swagger UI which was previously not visible becoz we are throwing the ErrorResponseDto only from our GlobalException logic.And openAPI doc cannot scan GlobalException automatically.
+                 )
+         )
+ }
+ )
 	@PostMapping("/create")
 	public ResponseEntity<ResponseDto>createAccountForCustomer(@Valid @RequestBody CustomerDto customerDto){
 		iAccountsService.createAccountForCustomer(customerDto);
@@ -46,7 +79,24 @@ public class AccountsController {
                
     } 
 	
-	
+	@Operation(
+            summary = "Fetch Account Details REST API",
+            description = "REST API to fetch Customer &  Account details based on a mobile number"
+    )
+	@ApiResponses({
+        @ApiResponse(
+                responseCode = "200",
+                description = "HTTP Status OK"
+        ),
+        @ApiResponse(
+                responseCode = "500",
+                description = "HTTP Status Internal Server Error",
+                content = @Content(
+                        schema = @Schema(implementation = ErrorResponseDto.class)
+                )
+        )
+}
+)
 	@GetMapping("/fetch")
 	public ResponseEntity<CustomerDto>fetchAccountDetails(@RequestParam @Pattern(regexp="(^$|[0-9]{10})",message="Mobile number must be 10 digits") String mobileNumber){
 		CustomerDto customerDto=iAccountsService.fetchAccountDetails(mobileNumber);
@@ -56,6 +106,28 @@ public class AccountsController {
 	}
 	
 
+	@Operation(
+            summary = "Update Account Details REST API",
+            description = "REST API to update Customer &  Account details based on a account number"
+    )
+	 @ApiResponses({
+         @ApiResponse(
+                 responseCode = "200",
+                 description = "HTTP Status OK"
+         ),
+         @ApiResponse(
+                 responseCode = "417",
+                 description = "Expectation Failed"
+         ),
+         @ApiResponse(
+                 responseCode = "500",
+                 description = "HTTP Status Internal Server Error",
+                 content = @Content(
+                         schema = @Schema(implementation = ErrorResponseDto.class)
+                 )
+         )
+ }
+ )
 	@PutMapping("/update")
 	//They can change any of the data except account number
     public ResponseEntity<ResponseDto> updateAccountDetails(@Valid @RequestBody CustomerDto customerDto) {
@@ -72,6 +144,28 @@ public class AccountsController {
         }
         
     }
+	@Operation(
+            summary = "Delete Account & Customer Details REST API",
+            description = "REST API to delete Customer &  Account details based on a mobile number"
+    )
+	@ApiResponses({
+        @ApiResponse(
+                responseCode = "200",
+                description = "HTTP Status OK"
+        ),
+        @ApiResponse(
+                responseCode = "417",
+                description = "Expectation Failed"
+        ),
+        @ApiResponse(
+                responseCode = "500",
+                description = "HTTP Status Internal Server Error",
+                content = @Content(
+                        schema = @Schema(implementation = ErrorResponseDto.class)
+                )
+        )
+}
+)
 	@DeleteMapping("/delete")
 	public ResponseEntity<ResponseDto> deleteAcountDetails(@RequestParam @Pattern(regexp="(^$|[0-9]{10})",message="Mobile number must be 10 digits") String mobileNumber){
 		 Boolean isDeleted=iAccountsService.deleteAcountDetails(mobileNumber);
