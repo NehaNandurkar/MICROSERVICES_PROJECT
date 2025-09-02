@@ -10,7 +10,6 @@ public class AuditAwareImpl implements AuditorAware<String>{
 
 	@Override
 	public Optional<String> getCurrentAuditor() {
-		// TODO Auto-generated method stub
 		return Optional.of("ACCOUNTS_MS");
 	}
 

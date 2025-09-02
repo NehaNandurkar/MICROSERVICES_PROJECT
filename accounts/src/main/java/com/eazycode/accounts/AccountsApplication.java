@@ -10,9 +10,7 @@ import io.swagger.v3.oas.annotations.info.Contact;
 import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.info.License;
 
-@SpringBootApplication
-@EnableJpaAuditing(auditorAwareRef="auditAwareImpl") //Passing the name of my bean 
-//Switch on the auto-tracking feature for created/updated fields in entities.
+
 //@OpenAPIDefinition Provides metadata for Swagger UI (title, description, version, contact, license) common to all API 
 @OpenAPIDefinition(
 		info=@Info(
@@ -30,9 +28,12 @@ import io.swagger.v3.oas.annotations.info.License;
 						)),
 		externalDocs=@ExternalDocumentation(
 				description="EazyCode Accounts microservice REST API Documentation",
-				url="http://www.eazycode.com/accounts/swagger-ui/index.html"
+				url="http://www.eazycode.com/swagger-ui/index.html"
 				)
 		)
+@SpringBootApplication
+@EnableJpaAuditing(auditorAwareRef="auditAwareImpl") //Passing the name of my bean 
+//Switch on the auto-tracking feature for created/updated fields in entities.
 public class AccountsApplication {
 
 	public static void main(String[] args) {
