@@ -1,0 +1,37 @@
+version: "3.9"
+
+services:
+  mysql:
+    image: mysql:8
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: Neha@12062001
+      MYSQL_DATABASE: accounts
+    ports:
+      - "3307:3306"
+    networks:
+      - spring-net
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  accounts:
+    image: neha12062001/accounts:s4
+    container_name: accounts
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/accounts
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: Neha@12062001
+    ports:
+      - "8080:8080"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - spring-net
+
+networks:
+  spring-net:
+    driver: bridge

@@ -11,7 +11,7 @@
 	<groupId>com.eazycode</groupId>
 	<artifactId>accounts</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>jar</packaging>
+	<packaging>jar</packaging><!-- To implement docker packaging should be jar-->
 	<name>accounts</name>
 	<description>Demo project for Spring Boot</description>
 	<url/>
@@ -84,22 +84,12 @@
 		</dependency>
 	</dependencies>
 
-	<build>
+<build>
 		<plugins>
 			<plugin>
-    <groupId>org.apache.maven.plugins</groupId>
-    <artifactId>maven-compiler-plugin</artifactId>
-    <version>3.11.0</version>
-    <configuration>
-        <annotationProcessorPaths>
-            <path>
-                <groupId>org.projectlombok</groupId>
-                <artifactId>lombok</artifactId>
-                <version>1.18.34</version>
-            </path>
-        </annotationProcessorPaths>
-    </configuration>
-</plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
 		</plugins>
 	</build>
 
