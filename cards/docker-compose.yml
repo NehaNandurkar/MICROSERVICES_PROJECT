@@ -1,0 +1,42 @@
+version: "3.9"
+
+services:
+  cards:
+    image: eazycode/cards:s4
+    container_name: cards-ms
+    ports:
+      - "9000:9000"
+    deploy:
+      resources:
+        limits:
+          memory: 1000m
+    networks:
+      - eazycode
+
+  loans:
+    image: eazycode/loans:s4
+    container_name: loans-ms
+    ports:
+      - "8090:8090"
+    deploy:
+      resources:
+        limits:
+          memory: 1000m
+    networks:
+      - eazycode
+
+  accounts:
+    image: eazycode/accounts:s4
+    container_name: accounts-ms
+    ports:
+      - "8080:8080"
+    deploy:
+      resources:
+        limits:
+          memory: 1000m
+    networks:
+      - eazycode
+
+networks:
+  eazycode:
+    driver: bridge

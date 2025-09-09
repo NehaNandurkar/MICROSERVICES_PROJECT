@@ -1,0 +1,69 @@
+services:
+  mysql:
+    image: mysql:8
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: Neha@12062001
+    ports:
+      - "3307:3306"
+    networks:
+      - spring-net
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql   # Creates accounts, loans, cards DBs at startup
+
+  accounts:
+    build: ./accounts         # 👈 build from ./accounts/Dockerfile
+    image: eazycode/accounts:s4
+    container_name: accounts
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/accounts
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: Neha@12062001
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - spring-net
+
+  loans:
+    build: ./loans            # 👈 build from ./loans/Dockerfile
+    image: eazycode/loans:s4
+    container_name: loans
+    ports:
+      - "8090:8090"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/loans
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: Neha@12062001
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - spring-net
+
+  cards:
+    build: ./cards            # 👈 build from ./cards/Dockerfile
+    image: eazycode/cards:s4
+    container_name: cards
+    ports:
+      - "9000:9000"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/cards
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: Neha@12062001
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - spring-net
+
+networks:
+  spring-net:
+    driver: bridge
