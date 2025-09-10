@@ -1,6 +1,7 @@
 package com.eazycode.accounts.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -47,8 +48,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 public class AccountsController {
 	
 	@Autowired
-	IAccountsService iAccountsService;
+	private IAccountsService iAccountsService;
 	
+	@Value("${build.version}")//Taking the value from application.properties file 
+	private String buildVersion;
 	//@Operation Provides metadata for Swagger UI for CREATE API
 	 @Operation(
 	            summary = "Create Account REST API",
@@ -180,6 +183,31 @@ public class AccountsController {
 	                     .body(new ResponseDto(AccountsConstants.STATUS_417, AccountsConstants.MESSAGE_417_DELETE));
 	        }
 	}
+	
+	@Operation(
+            summary = "Get Build Information",
+            description = "Get build information that is deployed into accounts microservice"
+    )
+	@ApiResponses({
+        @ApiResponse(
+                responseCode = "200",
+                description = "HTTP Status OK"
+        ),
+        @ApiResponse(
+                responseCode = "500",
+                description = "HTTP Status Internal Server Error",
+                content = @Content(
+                        schema = @Schema(implementation = ErrorResponseDto.class)
+                )
+        )
+}
+)
+	
+	@GetMapping("/build-info")
+	public ResponseEntity<String> getBuildInfo(){
+		return ResponseEntity
+				.status(HttpStatus.OK)
+				.body(buildVersion);	}
 	
 
 }
